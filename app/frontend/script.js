@@ -58,9 +58,13 @@ taskForm.addEventListener("submit", async (event) => {
     return;
   }
 
-  await fetch(`${API_URL}/api/tasks?title=${encodeURIComponent(title)}`, {
-    method: "POST",
-  });
+  await fetch(`${API_URL}/api/tasks`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ title }),
+});
 
   taskInput.value = "";
   await loadTasks();
