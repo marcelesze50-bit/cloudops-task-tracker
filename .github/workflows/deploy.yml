@@ -40,13 +40,19 @@ jobs:
         id: runner-ip
         run: echo "ip=$(curl -s https://checkip.amazonaws.com)" >> "$GITHUB_OUTPUT"
 
-      - name: Allow runner to Kubernetes API
-        run: |
-          aws ec2 authorize-security-group-ingress \
-            --group-id "${{ secrets.K3S_SECURITY_GROUP_ID }}" \
-            --protocol tcp \
-            --port 6443 \
-            --cidr "${{ steps.runner-ip.outputs.ip }}/32"
+      - name: Allow runner to Kubernetes API and SSH
+  run: |
+    aws ec2 authorize-security-group-ingress \
+      --group-id "${{ secrets.K3S_SECURITY_GROUP_ID }}" \
+      --protocol tcp \
+      --port 6443 \
+      --cidr "${{ steps.runner-ip.outputs.ip }}/32" || true
+
+    aws ec2 authorize-security-group-ingress \
+      --group-id "${{ secrets.K3S_SECURITY_GROUP_ID }}" \
+      --protocol tcp \
+      --port 22 \
+      --cidr "${{ steps.runner-ip.outputs.ip }}/32" || true
 
       - name: Log in to Amazon ECR
         id: ecr-login
@@ -106,11 +112,17 @@ jobs:
           kubectl rollout status deployment/frontend -n "$NAMESPACE" --timeout=180s
           kubectl get pods -n "$NAMESPACE"
 
-      - name: Revoke runner Kubernetes API access
-        if: always()
-        run: |
-          aws ec2 revoke-security-group-ingress \
-            --group-id "${{ secrets.K3S_SECURITY_GROUP_ID }}" \
-            --protocol tcp \
-            --port 6443 \
-            --cidr "${{ steps.runner-ip.outputs.ip }}/32" || true
+      - name: Revoke runner Kubernetes API and SSH access
+  if: always()
+  run: |
+    aws ec2 revoke-security-group-ingress \
+      --group-id "${{ secrets.K3S_SECURITY_GROUP_ID }}" \
+      --protocol tcp \
+      --port 6443 \
+      --cidr "${{ steps.runner-ip.outputs.ip }}/32" || true
+
+    aws ec2 revoke-security-group-ingress \
+      --group-id "${{ secrets.K3S_SECURITY_GROUP_ID }}" \
+      --protocol tcp \
+      --port 22 \
+      --cidr "${{ steps.runner-ip.outputs.ip }}/32" || true
