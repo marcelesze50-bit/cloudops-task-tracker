@@ -17,3 +17,7 @@ output "backend_ecr_repository_url" {
 output "frontend_ecr_repository_url" {
   value = aws_ecr_repository.frontend.repository_url
 }
+
+output "k3s_public_dns" {
+  value = aws_instance.k3s.public_dns
+}

@@ -27,3 +27,8 @@ build/
 .DS_Store
 .vscode/
 .idea/
+
+# Kubernetes local files
+kubeconfig
+**/kubeconfig
+k8s/secret.yaml

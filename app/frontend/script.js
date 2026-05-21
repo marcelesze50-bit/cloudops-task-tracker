@@ -1,4 +1,4 @@
-const API_URL = window.API_URL || "http://localhost:8000";
+const API_URL = window.API_URL || "";
 
 const taskList = document.getElementById("task-list");
 const taskForm = document.getElementById("task-form");

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: cloudops-task-tracker
+data:
+  APP_VERSION: "k8s-manual-v1"
+  POSTGRES_DB: "taskdb"
+  POSTGRES_USER: "taskuser"
