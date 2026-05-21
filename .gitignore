@@ -1,20 +1,29 @@
+# Environment files
 .env
 .env.*
 !.env.example
 
+# Python
 __pycache__/
 *.pyc
 .pytest_cache/
+.venv/
+venv/
 
+# Node / frontend
 node_modules/
 dist/
 build/
 
-.terraform/
-*.tfstate
-*.tfstate.*
-terraform.tfvars
+# Terraform
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/terraform.tfvars
+**/tfplan
+*.tfplan
 
+# OS / editor files
 .DS_Store
 .vscode/
 .idea/
