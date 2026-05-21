@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CloudOps Task Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <section class="panel">
+      <p class="eyebrow">DevOps Portfolio Project</p>
+      <h1>CloudOps Task Tracker</h1>
+      <p class="subtitle">
+        A small app prepared for Docker, Kubernetes, AWS and GitHub Actions deployment.
+      </p>
+
+      <form id="task-form" class="task-form">
+        <input
+          id="task-input"
+          type="text"
+          placeholder="Add a deployment task..."
+          autocomplete="off"
+          required
+        />
+        <button type="submit">Add</button>
+      </form>
+
+      <div class="status-row">
+        <span id="api-status">Checking API...</span>
+        <span id="api-version">Version: unknown</span>
+      </div>
+
+      <ul id="task-list" class="task-list"></ul>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
