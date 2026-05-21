@@ -1,0 +1,55 @@
+namespace:
+  create: true
+  name: cloudops-task-tracker
+
+imagePullSecrets:
+  - name: ecr-registry
+
+app:
+  version: k8s-helm-v1
+
+backend:
+  image:
+    repository: 963640736294.dkr.ecr.eu-central-1.amazonaws.com/cloudops-task-tracker-backend
+    tag: manual-v1
+    pullPolicy: IfNotPresent
+  replicas: 1
+  service:
+    port: 8000
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 300m
+      memory: 256Mi
+
+frontend:
+  image:
+    repository: 963640736294.dkr.ecr.eu-central-1.amazonaws.com/cloudops-task-tracker-frontend
+    tag: manual-v1
+    pullPolicy: IfNotPresent
+  replicas: 1
+  service:
+    port: 80
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 150m
+      memory: 128Mi
+
+postgres:
+  image: postgres:16-alpine
+  database: taskdb
+  username: taskuser
+  password: taskpass
+  storage:
+    size: 2Gi
+  service:
+    port: 5432
+
+ingress:
+  enabled: true
+  className: traefik
