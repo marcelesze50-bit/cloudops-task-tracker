@@ -64,25 +64,32 @@ GitHub Actions CD pipeline deploying to Kubernetes
 Docker images stored in Amazon ECR
 Application version set from the Git commit SHA during deployment
 
-Screenshots
-Application
+## Screenshots
 
+### Application
 
-Application Version
+![Application](docs/screenshots/app.png)
 
+### Application Version
 
-GitHub Actions
+![Application version](docs/screenshots/app_version.png)
 
+### GitHub Actions
 
-Kubernetes Pods
+![GitHub Actions](docs/screenshots/Workflows.png)
 
+### Kubernetes Pods
 
-Amazon ECR Backend Repository
+![Kubernetes pods](docs/screenshots/kubernetes_pods.png)
 
+### Amazon ECR Backend Repository
 
-Amazon ECR Frontend Repository
+![Amazon ECR backend](docs/screenshots/ecr_backend.png)
 
-Repository Structure
+### Amazon ECR Frontend Repository
+
+![Amazon ECR frontend](docs/screenshots/ecr_frontend.png)
+
 cloudops-task-tracker/
   app/
     backend/
@@ -100,6 +107,7 @@ cloudops-task-tracker/
   README.md
 
 Local Development
+
 Run the full application locally with Docker Compose:
 docker compose up --build
 Frontend:
@@ -111,7 +119,9 @@ curl http://localhost:8000/health
 curl http://localhost:8000/version
 curl http://localhost:8000/api/tasks
 
+
 Terraform Infrastructure
+
 The Terraform code is split into two parts:
 infra/backend
 infra
@@ -119,7 +129,6 @@ infra
 infra/backend creates the S3 bucket used for remote Terraform state.
 
 infra creates the main AWS infrastructure:
-
 VPC
 public subnet
 Internet Gateway
@@ -130,9 +139,11 @@ IAM role for EC2
 ECR repositories
 GitHub Actions OIDC role
 k3s installation through EC2 user data
+
 The main Terraform configuration provisions a single-node k3s cluster on EC2. This keeps the project cost lower than using a managed EKS cluster while still demonstrating Kubernetes deployment on AWS.
 
 Terraform Backend
+
 Initialize and apply the backend first:
 cd infra/backend
 terraform init
@@ -157,16 +168,17 @@ The application contains separate Dockerfiles for:
 
 backend FastAPI service
 frontend Nginx service
-Docker Compose runs:
 
+Docker Compose runs:
 frontend
 backend
 PostgreSQL
+
 This makes it possible to test the full application locally before deploying it to Kubernetes.
 
 Kubernetes Deployment
-The k8s/ directory contains raw Kubernetes manifests:
 
+The k8s/ directory contains raw Kubernetes manifests:
 Namespace
 ConfigMap
 Secret example
@@ -174,6 +186,7 @@ PostgreSQL StatefulSet
 Backend Deployment and Service
 Frontend Deployment and Service
 Ingress
+
 Manual deployment can be done with:
 kubectl apply -f k8s/namespace.yaml
 kubectl apply -f k8s/configmap.yaml
@@ -182,30 +195,37 @@ kubectl apply -f k8s/backend.yaml
 kubectl apply -f k8s/frontend.yaml
 kubectl apply -f k8s/ingress.yaml
 
+
 Helm Deployment
+
 The Helm chart is stored in:
 helm/cloudops-task-tracker
+
 
 Deploy or update the application with:
 helm upgrade --install cloudops-task-tracker helm/cloudops-task-tracker \
   --namespace cloudops-task-tracker \
   --set namespace.create=false \
   --set postgres.password=<password>
+  
 The Helm chart makes the Kubernetes deployment reusable and configurable. GitHub Actions uses Helm to deploy images tagged with the current commit SHA.
 
+
 CI/CD Pipeline
+
 The project contains two GitHub Actions workflows.
 
-CI
-The CI workflow runs on pushes and pull requests. It checks:
 
+CI
+
+The CI workflow runs on pushes and pull requests. It checks:
 backend application import
 Docker image builds
 Terraform formatting
 Terraform validation
 Deploy
-The deployment workflow:
 
+The deployment workflow:
 Authenticates to AWS using GitHub OIDC.
 Temporarily allows the GitHub runner to access SSH and the Kubernetes API.
 Builds backend and frontend Docker images.
@@ -216,13 +236,17 @@ Verifies Kubernetes rollout.
 Revokes temporary runner access from the security group.
 No long-lived AWS access keys are stored in GitHub Secrets.
 
+
 Security Notes
+
 AWS access from GitHub Actions is handled through OIDC and IAM roles.
 Terraform state can be stored remotely in an encrypted S3 bucket.
 Sensitive local files are ignored by Git.
 Kubernetes secret examples are included, but real secrets are not committed.
 The GitHub runner receives temporary access to SSH and the Kubernetes API only during deployment.
 Docker images are stored in private Amazon ECR repositories.
+
+
 Cleanup
 To remove the main AWS infrastructure:
 cd infra
@@ -234,9 +258,10 @@ cd infra/backend
 terraform destroy
 If S3 bucket versioning is enabled, all object versions must be deleted before the bucket can be removed.
 
-What I Learned
-This project helped me practice:
 
+What I Learned
+
+This project helped me practice:
 building and containerizing a web application
 provisioning AWS infrastructure with Terraform
 using remote Terraform state
