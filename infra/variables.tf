@@ -37,3 +37,8 @@ variable "public_key_path" {
   type    = string
   default = "/home/kali/.ssh/cloudops-task-tracker.pub"
 }
+
+variable "github_repository" {
+  type        = string
+  description = "GitHub repository in owner/name format, for example your-login/cloudops-task-tracker."
+}

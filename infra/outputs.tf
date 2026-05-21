@@ -21,3 +21,11 @@ output "frontend_ecr_repository_url" {
 output "k3s_public_dns" {
   value = aws_instance.k3s.public_dns
 }
+
+output "github_actions_role_arn" {
+  value = aws_iam_role.github_actions.arn
+}
+
+output "k3s_security_group_id" {
+  value = aws_security_group.k3s_node.id
+}
